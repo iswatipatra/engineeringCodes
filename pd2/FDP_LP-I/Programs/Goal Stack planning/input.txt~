@@ -1,0 +1,4 @@
+Input are :
+block : 4
+initial stage : (on b a)^(ontable c)^(ontable a)^(ontable d)^(clear b)^(clear c)^(clear d)^(AE)
+final stage : (on b d)^(on c a)^(ontable a)^(ontable d)^(clear c)^(clear b)^(AE)

@@ -1,0 +1,21 @@
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        return self.findMedian(nums1, nums2, 0, len(nums1)-1)
+    
+    def findMedian(self, nums1: List[int], nums2: List[int], start: int, end: int) -> float:
+        leftMaxNums1 = int(start+end)/2
+        rightMinNums1 = int(leftMaxNums1 + 1)
+        leftMaxNums2 = int((len(nums1)+len(nums2)+1)/2 - leftMaxNums1)
+        rightMinNums2 = int(leftMaxNums2 + 1)
+        
+        if nums1[leftMaxNums1]<nums2[rightMinNums2] and nums2[leftMaxNums2]<nums1[rightMinNums1]:
+            if (len(nums1)+len(nums2))%2 != 0:
+                return max(nums1[leftMaxNums1], nums2[leftMaxNums2])
+            else:
+                return (max(nums1[leftMaxNums1], nums2[leftMaxNums2]) + max(nums1[rightMinNums1], nums2[rightMinNums2])) / 2
+        
+        elif nums1[leftMaxNums1] > nums2[rightMinNums2]:
+            return self.findMedian(nums1, nums2, 0, leftMaxNums1-1)
+        
+        else:
+            return self.findMedian(nums1, nums2, leftMaxNums1+1, end)

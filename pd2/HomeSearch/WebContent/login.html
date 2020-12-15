@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>HomeSearch::Login</title>
+	</head>
+	<body>
+
+		<div>
+			<div style="border: 2px solid black; margin: 5% auto; padding: 20px; width: 40%">
+			<h3 style="text-align: center">Enter your login credentials</h3>
+
+			<div style="margin-top: 40px">
+				Username: <span style="margin-start: 5px"><input id="uname" type="text" maxlength="30" required /></span>
+			</div>
+
+			<div style="margin-top: 20px">
+				Password: <span style="margin-start: 5px"><input id="pass" type="password" maxlength="30" required /></span>
+			</div>
+
+			<div style="margin: 30px auto 10px">				
+				<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: 20%" onclick = "send()">Login</button>
+			</div>
+
+			<div>
+				<a style="text-align: center" href="register.html">New user? Register here.</a>
+			</div>
+
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		function send() {
+			var uname = document.getElementById("uname");
+			var pass = document.getElementById("pass");
+
+			var elements = new Array();
+			elements.push(uname);
+			elements.push(pass);
+
+			for(var i=0; i < elements.length; i++) {
+				if(!elements[i].checkValidity()) {
+					alert("Please fill all the fields.");
+					return;
+				}
+			}
+
+			var data = new FormData();
+			data.append("uname", uname.value);
+			data.append("pass", pass.value);
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {
+					if(this.responseText == "success") {
+						alert("Login successful.");
+						location.href = "welcome.html";
+					}
+					else {
+						alert("Invalid credentials.");
+					}
+				}
+			}
+
+			xhttp.onerror = function() {
+				alert("There was some problem completing your request.\nPlease try again later or contact the admin.");
+			}
+			xhttp.open("POST", "http://localhost:8765/HomeSearch/loginCheck", true);
+			xhttp.send(data);
+		}
+
+	</script>
+
+</html>

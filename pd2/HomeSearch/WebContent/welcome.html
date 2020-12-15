@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>HomeSearch</title>
+	</head>
+	<body>
+		<div style="border: 2px solid black; margin: 5% auto; padding: 20px; width: 40%">
+			<h2 style="text-align: center; text-decoration: underline;">HomeSearch</h2>
+			<h3 style="text-align: center; margin-top: 20px">Select an option</h3>
+
+			<div style="margin-top: 25px">
+				<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: auto" onclick = "search()">Search for apartments</button>
+			</div>
+
+			<div style="margin-top: 20px">
+				<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: auto" onclick = "addProperty()">Add property</button>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		function search() {
+			location.href = "./searchProperty.html";
+		}
+
+		function addProperty() {
+			location.href = "./addProperty.html";
+		}
+
+	</script>
+</html>

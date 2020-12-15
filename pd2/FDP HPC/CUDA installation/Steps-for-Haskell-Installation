@@ -1,0 +1,18 @@
+Stpes for Haskell Installation--->
+
+1. Goto Haskell website
+  https://www.haskell.org/platform/#linux-ubuntu
+
+2. Select Operating System on which you wnat to install eg. Ubuntu, Fedora,Redhat etc
+
+3. Click on Ubuntu
+
+4. Type the command on terminal
+    $ sudo apt-get install haskell-platform	   
+
+5.  Go to your terminal again and run the GHCI command. 
+   Once you get the Prelude prompt, you are ready to use Haskell on your local system.
+
+6. To exit from the GHCI prolog, you can use the command ":quit exit".
+
+7.

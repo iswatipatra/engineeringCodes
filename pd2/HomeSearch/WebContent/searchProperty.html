@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Search for apartments</title>
+	</head>
+
+	<body>
+
+		<div style="margin: 30px auto 10px">				
+			<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: 10%" onclick = "home()"><-- Home</button>
+		</div>
+
+		<div style="border: 2px solid black; margin: 2% auto; padding: 20px; width: 40%">
+			<h3 style="text-align: center">Enter the details of your apartment</h3>
+
+			<div style="margin-top: 40px">
+				* marked fields are mandatory.
+			</div>
+
+			<div style="margin-top: 20px">
+				City* : <span style="margin-start: 5px"><input id="city" type="text" maxlength="30" required /></span>
+			</div>
+
+			<div style="margin-top: 20px">
+				Locality: <span style="margin-start: 5px"><input id="locality" type="text" maxlength="30" /></span>
+			</div>			
+
+			<div style="margin-top: 20px">
+				Apartment room-configuration: 
+				<span style="margin-start: 5px">
+					<select id="selectRooms">
+						<option value="1">Any</option>
+						<option value="2">1BHK</option>
+						<option value="3">2BHK</option>
+						<option value="4">3BHK</option>
+					</select>
+				</span>
+			</div>
+
+			<div style="margin-top: 20px">
+				Maximum rent amount: ₹ <span style="margin-start: 5px;"><input id="rent" type="number" step="any" min="0" /></span>
+			</div>
+
+			<div style="margin: 30px auto 10px">				
+				<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: 20%" onclick = "send()">Search</button>
+			</div>
+
+		</div>
+
+		<div id="tableDiv" style="margin: 0 auto; width: 80%;">
+			<table id="resultTable" border="1" style="width: 100%; margin-bottom: 25px; table-layout: fixed; display: none">
+				<!--<tr>
+					<th>Rooms</th>
+					<th>Rent</th>
+				</tr>-->
+			</table>
+		</div>
+
+	</body>
+
+	<script type="text/javascript">
+
+		function home() {
+			location.href = "./welcome.html";
+		}
+
+		function addThCell(tr, val) {
+			var th = document.createElement("th");
+			var data = document.createTextNode(val);
+			th.appendChild(data);
+			tr.appendChild(th);
+		}
+
+		function addTdCell(tr, val) {
+			var td = document.createElement("td");
+			var data = document.createTextNode(val);
+			td.appendChild(data);
+			tr.appendChild(td);
+		}
+
+		function addTr(table, valArr, isTh) {
+			var tr = document.createElement("tr");
+
+			if(isTh == true) {
+				for(var i=0; i < valArr.length; i++) {
+					addThCell(tr, valArr[i]);
+				}
+			}
+			else {
+				for(var i=0; i < valArr.length; i++) {
+					addTdCell(tr, valArr[i]);
+				}
+			}
+
+			table.appendChild(tr);
+		}
+
+		function send() {
+			var city = document.getElementById("city");
+
+			if(!city.checkValidity()) {
+				alert("Please fill all the mandatory fields.");
+				return;
+			}
+
+			var locality = document.getElementById("locality");
+			var selectRooms = document.getElementById("selectRooms");
+			var rent = document.getElementById("rent");
+
+			if(rent.value == "") {
+				rent.value = 0;
+			}
+
+			var data = new FormData();
+			data.append("rooms", selectRooms.options[selectRooms.selectedIndex].text);
+			data.append("rent", rent.value);
+			data.append("city", city.value);
+			data.append("locality", locality.value);
+
+			var table = document.getElementById("resultTable");
+			table.innerHTML = "";
+
+			var valArr = new Array();
+			valArr.push("Rooms");
+			valArr.push("Rent");
+			valArr.push("City");
+			valArr.push("Locality");
+			valArr.push("State");
+			valArr.push("Contact #");
+
+			addTr(table, valArr, true);
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {					
+					var jsonData = JSON.parse(this.responseText);
+
+					for(var i in jsonData) {
+						valArr.length = 0;
+						valArr.push(jsonData[i].rooms);
+						valArr.push(jsonData[i].rent);
+						valArr.push(jsonData[i].city);
+						valArr.push(jsonData[i].locality);
+						valArr.push(jsonData[i].state);
+						valArr.push(jsonData[i].phone);
+						addTr(table, valArr, false);
+					}
+					table.style.display = "";
+				}
+				else if(this.status == 500) {
+					alert("There was some problem completing your request.\nPlease try again later or contact the admin.");
+				}
+			}
+
+			xhttp.onerror = function() {
+				alert("There was some problem completing your request.\nPlease try again later or contact the admin.");
+			}
+			xhttp.open("POST", "http://localhost:8765/HomeSearch/searchApartments", true);
+			xhttp.send(data);
+		}
+
+	</script>
+
+	<style type="text/css">
+		table, td, th {
+		  border-collapse: collapse;
+		  border-spacing: 0;
+		}
+
+		th,	td {
+		  text-align: center;
+		}
+	</style>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Add Property</title>
+	</head>
+	
+	<body>
+
+		<div style="margin: 30px auto 10px">				
+			<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: 10%" onclick = "home()"><-- Home</button>
+		</div>
+		
+		<div style="border: 2px solid black; margin: 2% auto; padding: 20px; width: 40%">
+			<h3 style="text-align: center">Enter the details of your apartment</h3>
+			<br><br>
+			Apartment room-configuration: 
+			<span>
+				<select id="selectRooms">
+					<option value="1">1BHK</option>
+					<option value="2">2BHK</option>
+					<option value="3">3BHK</option>
+				</select>
+			</span>
+			<br><br>
+			Rent amount: ₹ <span style="margin-start: 5px;"><input id="rent" type="number" step="any" min="0" required /></span>
+			
+			<br><br>
+			State: <span style="margin-start: 5px;"><input id="state" type="text" maxlength="30" required /></span>
+			
+			<br><br>
+			City: <span style="margin-start: 5px;"><input id="city" type="text" maxlength="30" required /></span>
+			
+			<br><br>
+			Locality: <span style="margin-start: 5px;"><input id="locality" type="text" maxlength="30" required /></span>
+
+			<div style="margin-top: 20px">
+				Contact number: +91<span style="margin-start: 5px"><input id="phone" type="number" maxlength="10" min="0" required /></span>
+			</div>
+			
+			<div style="margin: 30px auto 10px">				
+				<button style="display: block; margin-left: auto; margin-right: auto; padding: 5px; width: 20%" onclick = "send()">Submit</button>
+			</div>
+		</div>
+		
+	</body>
+	
+	<script type="text/javascript">
+		function home() {
+			location.href = "./welcome.html";
+		}
+
+		function send() {
+			var selectRooms = document.getElementById("selectRooms");
+			var rent = document.getElementById("rent");
+			var state = document.getElementById("state");
+			var city = document.getElementById("city");
+			var locality = document.getElementById("locality");
+			var phone = document.getElementById("phone");
+			
+			var elements = new Array();
+			elements.push(rent);
+			elements.push(state);
+			elements.push(city);
+			elements.push(locality);
+			elements.push(phone)
+			
+			for(var i=0; i < elements.length; i++) {
+				if(!elements[i].checkValidity()) {
+					alert("Please fill all the fields.");
+					return;
+				}
+			}
+
+			if(phone.value.length != 10) {
+				alert("Contact number should have 10 digits");
+				return;	
+			}
+			
+			var data = new FormData();
+			data.append("rooms", selectRooms.options[selectRooms.selectedIndex].text);
+			data.append("rent", rent.value);
+			data.append("state", state.value);
+			data.append("city", city.value);
+			data.append("locality", locality.value);
+			data.append("phone", phone.value);
+			
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if(this.readyState == 4 && this.status == 200) {					
+					if(this.responseText == "done") {
+						selectRooms.selectedIndex = 0;
+						rent.value = "";
+						state.value = "";
+						city.value = "";
+						locality.value = "";
+						phone.value = "";
+						alert("Submitted successfully");
+					}
+					else {
+						alert("There was some problem completing your request.\nPlease try again later or contact the admin.");
+					}
+				}
+				/*else if(this.status == 500) {
+					alert("There was some problem completing your request. Please contact the admin.");
+				}*/
+			}
+
+			xhttp.onerror = function() {
+				alert("There was some problem completing your request.\nPlease try again later or contact the admin.");
+			}
+			xhttp.open("POST", "http://localhost:8765/HomeSearch/submitDetails", true);
+			xhttp.send(data);
+		}
+	</script>
+</html>
